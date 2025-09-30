@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teslimat ve Ödeme</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fafafa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      overflow-x: hidden;
+    }
+
+    .header {
+      background-color: #f46c0b;
+      color: white;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 500;
+    }
+
+    .header img.logo {
+      height: 28px;
+    }
+
+    .steps {
+      display: flex;
+      align-items: center;
+      font-size: 15px;
+    }
+
+    .steps .check {
+      background-color: white;
+      color: #f97a1e;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-right: 6px;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+      padding: 40px 5%;
+    }
+
+    .left, .right {
+      background-color: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+
+    .left {
+      flex: 1.5;
+      min-width: 350px;
+    }
+
+    .right {
+      flex: 1;
+      min-width: 300px;
+      height: fit-content;
+    }
+
+    h2 {
+      font-size: 17px;
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    .container h2 {
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    label.input-label {
+      color: #555;
+      font-size: 14px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .required-star {
+      color: #aaa;
+      margin-left: 3px;
+    }
+
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      margin-bottom: 20px;
+      border: 1px solid #dcdcdc;
+      border-radius: 10px;
+      background-color: #fefefe;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .product {
+      display: flex;
+      align-items: center;
+      background-color: #f6f6f6;
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-top: 10px;
+    }
+
+    .product img {
+      width: 60px;
+      margin-right: 18px;
+      border-radius: 6px;
+      background-color: #e0e0e0;
+    }
+
+    .product-details {
+      flex-grow: 1;
+      font-size: 14px;
+    }
+
+    .product-details strong {
+      font-weight: 600;
+    }
+
+    .price {
+      font-weight: 600;
+    }
+
+    .button {
+      background-color: #f46c0b;
+      color: white;
+      padding: 14px 24px;
+      border: none;
+      font-weight: 500;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 24px;
+      font-size: 15px;
+    }
+
+    .summary {
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .summary strong {
+      font-size: 17px;
+    }
+
+    .checkbox {
+      margin: 20px 0;
+      font-size: 14px;
+    }
+
+    .button[disabled] {
+      background-color: #c4c4c4;
+      cursor: not-allowed;
+    }
+
+    .radio-group {
+      margin-bottom: 16px;
+    }
+
+    .radio-group label {
+      margin-right: 20px;
+      font-size: 14px;
+    }
+
+    .radio-group input[type="radio"] {
+      margin-right: 6px;
+    }
+
+    /* === SIDEBAR === */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 380px;
+      height: 100%;
+      background-color: white;
+      box-shadow: -2px 0 12px rgba(0, 0, 0, 0.2);
+      padding: 32px 24px;
+      transition: right 0.3s ease;
+      z-index: 1000;
+      overflow-y: auto;
+    }
+
+    .sidebar.active {
+      right: 0;
+    }
+
+    .sidebar h2 {
+      margin-top: 0;
+    }
+
+    .sidebar-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <img class="logo" src="./assets/teknosa-logo.png" alt="Teknosa Logo">
+    <div class="steps">
+      <span class="check">✔</span>
+      <span>Sepet — <strong>2 Teslimat ve Ödeme</strong></span>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="left">
+      <h2>Adres Bilgileri</h2>
+      <input type="text" placeholder="Teslimat Adresi" id="teslimat-adresi">
+
+      <h2>Teslimat Seçenekleri</h2>
+      <p><strong>Standart Teslimat:</strong> Ücretsiz</p>
+
+      <h2>Sepet Özeti</h2>
+      <div class="product">
+        <img src="./assets/msi-laptop.jpg" alt="MSI Laptop">
+        <div class="product-details">
+          <strong>MSI Pulse 15 A12VFR-047XTR</strong><br>
+          16 GB, 1512 GB SSD
+        </div>
+        <div class="price">45.999 TL</div>
+      </div>
+
+      <button class="button">Devam Et</button>
+    </div>
+
+    <div class="right">
+      <h2>Sipariş Özeti</h2>
+      <div class="summary">
+        1 ürün: <strong>45.999 TL</strong><br>
+        Kargo: <strong>Ücretsiz</strong><br><br>
+        Toplam: <strong>45.999 TL</strong>
+      </div>
+
+      <div class="checkbox">
+        <input type="checkbox" id="sozlesme">
+        <label for="sozlesme">Ön Bilgilendirme Formu ve Mesafeli Satış Sözleşmesi’ni okudum, kabul ediyorum.</label>
+      </div>
+
+      <button class="button" disabled>Onayla ve Bitir</button>
+    </div>
+  </div>
+
+  <!-- === ADRES EKLEME SIDEBAR === -->
+  <div class="sidebar" id="adresSidebar">
+    <div class="sidebar-close" id="closeSidebar">×</div>
+    <h2>Yeni Adres Ekle</h2>
+
+    <div class="radio-group">
+      <label><strong>Fatura Tipi</strong></label><br>
+      <label><input type="radio" name="fatura" checked> Bireysel</label>
+      <label><input type="radio" name="fatura"> Kurumsal</label>
+    </div>
+
+    <label class="input-label">Ev / İş Okul</label>
+    <input type="text" placeholder="Ev / İş Okul*">
+
+    <input type="text" placeholder="Ad giriniz*">
+
+    
+    <input type="text" placeholder="Soyad*" required>
+
+
+    <input type="text" placeholder="Telefon*" required>
+
+    <input type="text" placeholder="İl*">
+
+    
+    <input type="text" placeholder="Mahalle*" required>
+
+    <label class="input-label">Adres <span class="required-star">*</span></label>
+    <textarea placeholder="Açık adresinizi yazınız" required></textarea>
+
+    <button class="button">Kaydet</button>
+  </div>
+
+  <script>
+    const teslimatInput = document.getElementById("teslimat-adresi");
+    const sidebar = document.getElementById("adresSidebar");
+    const closeBtn = document.getElementById("closeSidebar");
+
+    teslimatInput.addEventListener("click", () => {
+      sidebar.classList.add("active");
+    });
+
+    closeBtn.addEventListener("click", () => {
+      sidebar.classList.remove("active");
+    });
+  </script>
+
+</body>
+</html>
