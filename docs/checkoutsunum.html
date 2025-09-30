@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teknosa Checkout Süreci Geliştirmeleri Sunumu</title>
+    <!-- Tailwind CSS CDN'i yükleniyor -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter fontu Google Fonts'tan yükleniyor -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Genel stil ayarları */
+        body {
+            font-family: 'Inter', sans-serif; /* Belirtilen font ailesi */
+            margin: 0;
+            padding: 0;
+            background-color: #f3f4f6; /* Hafif gri arka plan */
+            line-height: 1.6; /* Okunabilirliği artırmak için satır yüksekliği */
+        }
+        /* Her bir bölümün stilini tanımlar (eski slaytların yerini alır) */
+        .section {
+            min-height: 80vh; /* Her bölümün minimum yüksekliği */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem 2rem; /* Üst/alt ve yan dolgu */
+            background-color: #fff; /* Bölüm arka plan rengi (varsayılan) */
+            margin-bottom: 2rem; /* Bölümler arası boşluk */
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08); /* Hafif gölge efekti */
+            border-radius: 1.5rem; /* Yuvarlak köşeler */
+        }
+
+        /* Başlık bölümü için özel stil */
+        .hero-section {
+            min-height: 100vh; /* Tam ekran yüksekliği */
+            background-color: #fff;
+            margin-bottom: 0; /* İlk bölümün altında boşluk olmasın */
+            border-radius: 0; /* Köşeler yuvarlak olmasın */
+            box-shadow: none; /* Gölge olmasın */
+        }
+
+        /* Teknosa kurumsal renkleri */
+        .teknosa-orange { background-color: #FF6600; }
+        .teknosa-blue { background-color: #007bff; } /* Mavi renk için uygun bir ton */
+        .teknosa-text-orange { color: #FF6600; }
+        .teknosa-text-blue { color: #007bff; }
+
+        /* İçerik konteynerinin genel stilini tanımlar */
+        .content-container {
+            max-width: 1200px; /* İçeriğin maksimum genişliği */
+            width: 100%;
+            text-align: center;
+            padding: 2.5rem; /* İç dolgu */
+            border-radius: 1.5rem; /* Yuvarlak köşeler */
+            background-color: #fff; /* İçerik konteyneri her zaman beyaz kalsın */
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15); /* Hafif gölge efekti */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Görsellerin genel stilini tanımlar */
+        .section-image {
+            max-width: 40%; /* Görselin maksimum genişliği %48'den %40'a düşürüldü */
+            height: auto; /* Oranını koru */
+            border-radius: 0.75rem; /* Yuvarlak köşeler */
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Hafif gölge efekti */
+            object-fit: contain; /* Görselin boyutuna sığmasını sağla */
+        }
+
+        /* Sadece belirli bir görseli büyütmek için yeni stil */
+        .enlarged-image {
+            max-width: 70%; /* Bu görselin maksimum genişliği %70 olarak ayarlandı */
+        }
+
+        /* Logo başlık kısmının stilini tanımlar */
+        .logo-header {
+            position: absolute;
+            top: 1.5rem;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 10; /* Diğer elementlerin üzerinde görünmesini sağla */
+        }
+        /* Logo başlık kısmının mobil görünümdeki stilini tanımlar */
+        @media (max-width: 768px) {
+            .logo-header {
+                top: 1rem;
+                left: 1rem;
+            }
+            .logo-header img {
+                height: 2.5rem; /* Logo boyutu küçültme */
+            }
+            .section-image {
+                max-width: 80%; /* Mobil görünümde genel görsellerin daha geniş olması için */
+            }
+            .enlarged-image {
+                max-width: 95%; /* Mobil görünümde büyütülmüş görselin daha da geniş olması için */
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Teknosa logosu (sayfanın üstünde sabit) -->
+    <div class="logo-header">
+        <img src="https://i.imgur.com/IEfbJTg.png" alt="Teknosa Logo" class="h-10">
+    </div>
+
+    <!-- Başlık Bölümü -->
+    <section class="section hero-section">
+        <div class="content-container bg-white p-10 rounded-2xl shadow-xl flex flex-col items-center">
+            <h1 class="text-5xl font-bold mb-6 text-teknosa-orange">Teknosa Checkout Süreci Geliştirmeleri Sunumu</h1>
+            <p class="text-2xl mb-4 text-gray-700">Hazırlayan: <span class="font-semibold">Engin Bora İlan</span></p>
+            <p class="text-xl text-gray-600 max-w-2xl mt-4">Teknosa'nın online alışveriş checkout (ödeme) sürecinde yapılan kullanıcı deneyimi (UX) geliştirmelerini üst yönetime profesyonel bir sunum ile aktarmak.</p>
+        </div>
+    </section>
+
+    <!-- Giriş ve Genel Bakış Bölümü -->
+    <section class="section bg-blue-50">
+        <div class="content-container bg-white p-10 rounded-2xl shadow-xl">
+            <h2 class="text-4xl font-bold mb-6 text-teknosa-blue">Giriş ve Genel Bakış</h2>
+            <p class="text-xl text-gray-700 mb-6">Bu sunumda, Teknosa online alışveriş deneyiminin kalbi olan ödeme sürecinde gerçekleştirdiğimiz kritik kullanıcı deneyimi (UX) geliştirmelerini detaylandıracağız. Amacımız, kullanıcılarımızın alışverişlerini daha hızlı, kolay ve hatasız tamamlamalarını sağlayarak memnuniyeti artırmaktır.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 w-full">
+                <!-- Hız kartı -->
+                <div class="flex flex-col items-center p-4 bg-orange-100 rounded-lg shadow-sm">
+                    <svg class="w-12 h-12 text-teknosa-orange mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    <p class="text-lg font-semibold text-gray-800">Hız</p>
+                    <p class="text-sm text-gray-600 text-center">Süreci hızlandırarak zaman kazandırıyoruz.</p>
+                </div>
+                <!-- Kolaylık kartı -->
+                <div class="flex flex-col items-center p-4 bg-orange-100 rounded-lg shadow-sm">
+                    <svg class="w-12 h-12 text-teknosa-orange mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-lg font-semibold text-gray-800">Kolaylık</p>
+                    <p class="text-sm text-gray-600 text-center">Kullanımı basitleştirerek hata oranını düşürüyoruz.</p>
+                </div>
+                <!-- Güven kartı -->
+                <div class="flex flex-col items-center p-4 bg-orange-100 rounded-lg shadow-sm">
+                    <!-- Orijinal, daha karmaşık kilit ikonu SVG yolu geri getirildi -->
+                    <svg class="w-12 h-12 text-teknosa-orange mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21H6.5a2 2 0 01-1.789-2.894l3.5-7A2 2 0 019.236 9H14zm0 0V9a2 2 0 00-2-2V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4m6 0h-2"></path></svg>
+                    <p class="text-lg font-semibold text-gray-800">Güven</p>
+                    <p class="text-sm text-gray-600 text-center">Şeffaflığı artırarak güven oluşturuyoruz.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teslimat Adresi - Zorunlu Alan Belirtme Bölümü -->
+    <section class="section bg-blue-50">
+        <div class="content-container bg-white p-10 rounded-2xl shadow-xl flex flex-col lg:flex-row items-center gap-8">
+            <div class="flex-1 text-left">
+                <h2 class="text-4xl font-bold mb-4 text-teknosa-blue">1. Teslimat Adresi: Zorunlu Alan Belirtme</h2>
+                <p class="text-lg text-gray-700 mb-4"><span class="font-semibold text-teknosa-orange">Mevcut Durum Sorunu:</span> Teslimat adresi ekleme yan panelinde, posta kodu hariç tüm alanlar zorunlu olmasına rağmen, yalnızca "İl", "İlçe" ve "Adres" başlıklarında zorunlu alan (*) işareti bulunuyordu. Bu durum kullanıcıda kafa karışıklığı yaratıyordu.</p>
+                <p class="text-lg text-gray-700 mb-6"><span class="font-semibold text-teknosa-orange">Geliştirme Amacı:</span> Kullanıcının tüm zorunlu alanları kolayca ayırt etmesini sağlayarak hatalı girişleri minimize etmek ve form tamamlama oranını artırmak.</p>
+                <p class="text-xl font-semibold text-gray-800 mt-4">Kullanıcı Etkisi:</p>
+                <ul class="list-disc list-inside text-lg text-gray-700 pl-4">
+                    <li>Form doldurma süresinde azalma.</li>
+                    <li>Hatalı giriş sayısında düşüş.</li>
+                    <li>Kullanıcı memnuniyetinde artış.</li>
+                </ul>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-6">
+                <div class="flex flex-col items-center w-full">
+                    <p class="text-xl font-semibold mb-2 text-gray-800">Önceki Hali</p>
+                    <img src="https://i.imgur.com/eRuYYB2.png" alt="Teslimat Adresi Önceki Hali" class="section-image">
+                </div>
+                <div class="flex flex-col items-center w-full">
+                    <p class="text-xl font-semibold mb-2 text-gray-800">Yeni Hali</p>
+                    <img src="https://i.imgur.com/dNNMgwf.png" alt="Teslimat Adresi Yeni Hali" class="section-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Teslimat Adresi - Şehir Seçimi Optimizasyonu Bölümü -->
+    <section class="section">
+        <div class="content-container bg-white p-10 rounded-2xl shadow-xl flex flex-col lg:flex-row items-center gap-8">
+            <div class="flex-1 text-left">
+                <h2 class="text-4xl font-bold mb-4 text-teknosa-blue">2. Teslimat Adresi: Şehir Seçimi Optimizasyonu</h2>
+                <p class="text-lg text-gray-700 mb-4"><span class="font-semibold text-teknosa-orange">Mevcut Durum Sorunu:</span> Şehir seçimi listesi, kullanıcıların sıkça tercih ettiği büyük şehirlerin alt sıralarda kalması nedeniyle ekstra kaydırma ve tıklama gerektiriyordu.</p>
+                <p class="text-lg text-gray-700 mb-6"><span class="font-semibold text-teknosa-orange">Geliştirme Amacı:</span> Kullanıcı deneyimi (UX) prensiplerinden "minimum scroll ve click sayısı" hedefine ulaşmak. Müşterilerin büyük bir bölümünün İstanbul, Ankara ve İzmir'den olması göz önüne alındığında, bu şehirleri listenin başına alarak süreci hızlandırmak ve kullanıcı memnuniyetini artırmak.</p>
+                <p class="text-xl font-semibold text-gray-800 mt-4">Uygulama:</p>
+                <ul class="list-disc list-inside text-lg text-gray-700 mb-6 pl-4">
+                    <li>"İstanbul", "Ankara" ve "İzmir" şehirlerinin şehir listesinin en üstüne sabitlenmesi.</li>
+                </ul>
+                <p class="text-xl font-semibold text-gray-800">Kullanıcı Etkisi:</p>
+                <ul class="list-disc list-inside text-lg text-gray-700 pl-4">
+                    <li>Şehir seçimi sürecinde önemli hızlanma.</li>
+                    <li>Daha az tıklama ve kaydırma ihtiyacı.</li>
+                    <li>Özellikle büyük şehirlerde yaşayan kullanıcılar için artan memnuniyet.</li>
+                </ul>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-6">
+                <p class="text-xl font-semibold mb-2 text-gray-800">Yeni Hali (Optimize Edilmiş Liste)</p>
+                <img src="https://i.imgur.com/bOLSP2M.png" alt="Şehir Seçimi Yeni Hali" class="section-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Sepet Özeti Alanının Detaylandırılması ve Konumlandırması Bölümü -->
+    <section class="section">
+        <div class="content-container bg-white p-10 rounded-2xl shadow-xl flex flex-col lg:flex-row items-center gap-8">
+            <div class="flex-1 text-left">
+                <h2 class="text-4xl font-bold mb-4 text-teknosa-blue">3. Sepet Özeti: Detaylandırma ve Konumlandırma</h2>
+                <p class="text-lg text-gray-700 mb-4"><span class="font-semibold text-teknosa-orange">Mevcut Durum Sorunu:</span> Ödeme aşamasındaki "Sepet Özeti" alanı yetersiz bilgi sunmakta ve açıklayıcı değildi. Kullanıcılar, ödeme yapmadan önce sepetlerindeki ürünleri ve detaylarını net bir şekilde görmek isterler.</p>
+                <p class="text-lg text-gray-700 mb-6"><span class="font-semibold text-teknosa-orange">Geliştirme Amacı:</span> Kullanıcının satın alma kararını güçlendirmek ve güven oluşturmak. Ödeme öncesinde sepetteki ürünlerin detaylarını (ürün adı, adet, fiyat vb.) açıkça göstererek şeffafllığı artırmak ve olası hatalı siparişleri engellemek.</p>
+                <p class="text-xl font-semibold text-gray-800 mt-4">Kullanıcı Etkisi:</p>
+                <ul class="list-disc list-inside text-lg text-gray-700 pl-4">
+                    <li>Satın alma güveninde artış.</li>
+                    <li>Hatalı sipariş riskinde azalma.</li>
+                    <li>Şeffaflık sayesinde artan kullanıcı memnuniyeti.</li>
+                </ul>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-6">
+                <div class="flex flex-col items-center w-full">
+                    <p class="text-xl font-semibold mb-2 text-gray-800">Eski Hali</p>
+                    <img src="https://i.imgur.com/dJjZJB6.png" alt="Sepet Özeti Eski Hali" class="section-image">
+                </div>
+                <div class="flex flex-col items-center w-full">
+                    <p class="text-xl font-semibold mb-2 text-gray-800">Yeni Hali (Daha Detaylı)</p>
+                    <!-- Sadece bu görsel için enlarged-image sınıfı eklendi -->
+                    <img src="https://i.imgur.com/bxL4Omy.png" alt="Sepet Özeti Yeni Hali" class="section-image enlarged-image">
+                </div>
+                <div class="flex flex-col items-center w-full">
+                    <p class="text-xl font-semibold mb-2 text-gray-800">Yeni Hali (Konum Değişikliği)</p>
+                    <img src="https://i.imgur.com/J1SdO5j.png" alt="Sepet Özeti Yeni Hali Konum Değişikliği" class="section-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Yeni Bölüm: Ön Bilgilendirme Formu Optimizasyonu -->
+    <section class="section">
+        <div class="content-container bg-white p-10 rounded-2xl shadow-xl flex flex-col lg:flex-row items-center gap-8">
+            <div class="flex-1 text-left">
+                <h2 class="text-4xl font-bold mb-4 text-teknosa-blue">4. Ön Bilgilendirme Formu Optimizasyonu</h2>
+                <p class="text-lg text-gray-700 mb-4"><span class="font-semibold text-teknosa-orange">Mevcut Durum Sorunu:</span> Ön Bilgilendirme Formu, küçük bir pencere içinde açıldığı için okuması zor ve çok fazla kaydırma gerektiriyordu. Bu durum, kullanıcıların önemli bilgilere erişimini zorlaştırıyordu.</p>
+                <p class="text-lg text-gray-700 mb-6"><span class="font-semibold text-teknosa-orange">Geliştirme Amacı:</span> Kullanıcıların Ön Bilgilendirme Formu'nu daha kolay okumasını ve onaylamasını sağlamak, böylece yasal yükümlülüklerin sorunsuz yerine getirilmesini ve kullanıcı güvenini artırmak.</p>
+                <p class="text-xl font-semibold text-gray-800 mt-4">Uygulama:</p>
+                <ul class="list-disc list-inside text-lg text-gray-700 mb-6 pl-4">
+                    <li>Sözleşmeye basıldığında, Ön Bilgilendirme Formu'nun ekranda daha büyük ve okunabilir bir alanda genişletilmiş olarak gösterilmesi.</li>
+                    <li>Genişletilmiş içeriğin daha okunaklı bir font boyutu ve düzen ile sunulması.</li>
+                    <li>Gereksiz kaydırmayı en aza indirmek için içeriğin optimize edilmesi.</li>
+                </ul>
+                <p class="text-xl font-semibold text-gray-800">Kullanıcı Etkisi:</p>
+                <ul class="list-disc list-inside text-lg text-gray-700 pl-4">
+                    <li>Bilgiye daha kolay ve hızlı erişim.</li>
+                    <li>Formu okuma ve anlama kolaylığı.</li>
+                    <li>Kullanıcı memnuniyetinde ve yasal uyumlulukta artış.</li>
+                </ul>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-6">
+                <div class="flex flex-col items-center w-full">
+                    <p class="text-xl font-semibold mb-2 text-gray-800">Mevcut Durum</p>
+                    <!-- Bu görsel için enlarged-image sınıfı eklendi -->
+                    <img src="https://i.imgur.com/Nm8Bwfk.png" alt="Ön Bilgilendirme Formu Mevcut Durum" class="section-image enlarged-image">
+                </div>
+                <div class="flex flex-col items-center w-full">
+                    <p class="text-xl font-semibold mb-2 text-gray-800">Yeni Hali (Genişletilmiş Görünüm)</p>
+                    <img src="https://i.imgur.com/61EE7cJ.png" alt="Ön Bilgilendirme Formu Genişletilmiş Görünüm" class="section-image enlarged-image">
+                    <span class="text-sm text-gray-500 mt-1"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Yeni Bölüm: Teslimat Seçenekleri Optimizasyonu -->
+    <section class="section">
+        <div class="content-container bg-white p-10 rounded-2xl shadow-xl flex flex-col lg:flex-row items-center gap-8">
+            <div class="flex-1 text-left">
+                <h2 class="text-4xl font-bold mb-4 text-teknosa-blue">5. Teslimat Seçenekleri Optimizasyonu</h2>
+                <p class="text-lg text-gray-700 mb-4"><span class="font-semibold text-teknosa-orange">Mevcut Durum Sorunu:</span> Checkout sürecinde "Teslimat Seçenekleri" başlığı altında tek bir seçenek bulunmasına rağmen ayrı bir bölüm açılması, ekran alanını küçültüyor ve kullanıcıya gereksiz bir adım ekleyerek ekstra işlem yaptırıyordu.</p>
+                <p class="text-lg text-gray-700 mb-6"><span class="font-semibold text-teknosa-orange">Geliştirme Amacı:</span> Kullanıcı deneyimini basitleştirmek, gereksiz adımları ortadan kaldırmak ve ekran kullanımını optimize ederek süreci daha akıcı hale getirmek.</p>
+                <p class="text-xl font-semibold text-gray-800 mt-4">Uygulama:</p>
+                <ul class="list-disc list-inside text-lg text-gray-700 mb-6 pl-4">
+                    <li>Eğer sadece tek bir teslimat seçeneği varsa, "Teslimat Seçenekleri" bölümünü tamamen kaldırarak bu seçeneği doğrudan ilgili alanda göstermek.</li>
+                    <li>Böylece kullanıcının ekstra tıklama yapmasına veya ekranı kaydırmasına gerek kalmayacak.</li>
+                </ul>
+                <p class="text-xl font-semibold text-gray-800">Kullanıcı Etkisi:</p>
+                <ul class="list-disc list-inside text-lg text-gray-700 pl-4">
+                    <li>Daha hızlı ve kesintisiz ödeme süreci.</li>
+                    <li>Daha az tıklama ve kaydırma ihtiyacı.</li>
+                    <li>Geliştirilmiş kullanıcı memnuniyeti ve daha yüksek dönüşüm oranları potansiyeli.</li>
+                </ul>
+            </div>
+            <div class="flex-1 flex flex-col items-center gap-6">
+                <div class="flex flex-col items-center w-full">
+                    <p class="text-xl font-semibold mb-2 text-gray-800">Önceki Hali</p>
+                    <img src="https://i.imgur.com/7EZSiSP.png" alt="Teslimat Seçenekleri Eski Hali" class="section-image enlarged-image"> <!-- enlarged-image sınıfı eklendi -->
+                </div>
+                <div class="flex flex-col items-center w-full">
+                    <p class="text-xl font-semibold mb-2 text-gray-800">Yeni Hali</p>
+                    <img src="https://i.imgur.com/wHEoRV9.png" alt="Teslimat Seçenekleri Yeni Hali" class="section-image enlarged-image"> <!-- enlarged-image sınıfı eklendi -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sonuç ve Özet Bölümü -->
+    <section class="section">
+        <div class="content-container bg-white p-10 rounded-2xl shadow-xl flex flex-col items-center">
+            <h2 class="text-4xl font-bold mb-6 text-teknosa-orange">Sonuç ve Özet</h2>
+            <p class="text-xl text-gray-700 mb-8 max-w-2xl text-center">Gerçekleştirdiğimiz bu UX geliştirmeleri ile Teknosa'nın online ödeme sürecini daha kullanıcı dostu, hızlı ve güvenilir hale getirdik. Bu iyileştirmelerin, kullanıcı memnuniyetini artırarak dönüşüm oranlarımıza olumlu katkı sağlayacağına inanıyoruz.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                <!-- Fayda kartları -->
+                <div class="flex items-center p-4 bg-blue-50 rounded-lg shadow-sm">
+                    <svg class="w-10 h-10 text-teknosa-blue mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                    <p class="text-lg font-semibold text-gray-800">Artan Kullanıcı Memnuniyeti</p>
+                </div>
+                <div class="flex items-center p-4 bg-blue-50 rounded-lg shadow-sm">
+                    <svg class="w-10 h-10 text-teknosa-blue mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8L11 21m-9-9h8m0 0V5m0 7L3 3"></path></svg>
+                    <p class="text-lg font-semibold text-gray-800">Optimize Edilmiş Dönüşüm Oranları</p>
+                </div>
+                <div class="flex items-center p-4 bg-blue-50 rounded-lg shadow-sm">
+                    <svg class="w-10 h-10 text-teknosa-blue mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-lg font-semibold text-gray-800">Daha Az Hata, Daha Fazla Güven</p>
+                </div>
+                <div class="flex items-center p-4 bg-blue-50 rounded-lg shadow-sm">
+                    <svg class="w-10 h-10 text-teknosa-blue mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-lg font-semibold text-gray-800">Hızlandırılmış Ödeme Süreci</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
